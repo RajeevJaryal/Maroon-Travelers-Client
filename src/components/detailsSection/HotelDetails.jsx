@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchListing } from "../../redux/fetchDataSlice";
 
+import { fetchListing } from "../../redux/fetchDataSlice";
+import { createBooking, clearBookingStatus } from "../../redux/bookingsSlice";
 
 function formatINR(value) {
   const n = Number(value || 0);
@@ -30,12 +31,24 @@ export default function HotelDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // listings
   const { items, loading, error } = useSelector((s) => s.listings);
   const safeItems = useMemo(() => (Array.isArray(items) ? items : []), [items]);
   const hotel = useMemo(
     () => safeItems.find((x) => String(x.id) === String(id)),
     [safeItems, id]
   );
+
+  // ✅ user auth (need uid for /bookingsByUser)
+  const { idToken, uid, localId } = useSelector((s) => s.userAuth || {});
+  const userId = uid || localId; // support both keys
+
+  // booking slice state
+  const {
+    creating,
+    error: bookingError,
+    success,
+  } = useSelector((s) => s.bookings);
 
   // if user refresh details page
   useEffect(() => {
@@ -54,49 +67,86 @@ export default function HotelDetails() {
   const [formError, setFormError] = useState("");
 
   const openModal = () => {
+    // require login
+    if (!idToken) {
+      navigate("/auth");
+      return;
+    }
+    // avoid booking if not available
+    if (!hotel?.isAvailable) return;
+
     setFormError("");
+    dispatch(clearBookingStatus());
     setShowModal(true);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  const closeModal = () => setShowModal(false);
 
-  const onSubmitBooking = (e) => {
+  const onSubmitBooking = async (e) => {
     e.preventDefault();
     setFormError("");
+    dispatch(clearBookingStatus());
 
     if (!hotel) return;
 
     const nameOk = fullName.trim().length >= 2;
-    const phoneOk = /^\d{10}$/.test(phone.trim()); // India 10-digit basic
+    const phoneOk = /^\d{10}$/.test(phone.trim());
     const peopleNum = Number(people);
 
     if (!nameOk) return setFormError("Please enter your name.");
     if (!phoneOk) return setFormError("Enter a valid 10-digit phone number.");
-    if (!peopleNum || peopleNum < 1) return setFormError("People must be at least 1.");
+    if (!peopleNum || peopleNum < 1)
+      return setFormError("People must be at least 1.");
     if (!fromDate) return setFormError("Please select From date.");
     if (!toDate) return setFormError("Please select To date.");
 
-    const nights = daysBetween(fromDate, toDate);
-    if (nights <= 0) return setFormError("To date must be after From date.");
+    const nightsCalc = daysBetween(fromDate, toDate);
+    if (nightsCalc <= 0)
+      return setFormError("To date must be after From date.");
 
-    // ✅ For now: show booking summary (later we will save to DB using thunk)
-    const total = nights * Number(hotel.pricePerNight || 0);
+    if (!userId) return setFormError("Please login again (userId missing).");
 
-    alert(
-      `Booking Requested ✅\n\nHotel: ${hotel.placeName}\nName: ${fullName}\nPhone: ${phone}\nPeople: ${peopleNum}\nFrom: ${fromDate}\nTo: ${toDate}\nNights: ${nights}\nTotal: ₹${total.toLocaleString(
-        "en-IN"
-      )}\n\nNext step: we will save this to Firebase & set status "pending".`
+    const pricePerNight = Number(hotel.pricePerNight || 0);
+    const totalPrice = nightsCalc * pricePerNight;
+
+    // ✅ Booking payload for admin + order history (snapshot included)
+    const bookingData = {
+      listingId: String(hotel.id),
+      userId: String(userId),
+
+      name: fullName.trim(),
+      phone: phone.trim(),
+      people: peopleNum,
+      fromDate,
+      toDate,
+      nights: nightsCalc,
+
+      pricePerNight,
+      totalPrice,
+
+      // snapshot for order history page
+      listingSnapshot: {
+        title: hotel.placeName || hotel.title || "Hotel",
+        description: hotel.description || "",
+        image: Array.isArray(hotel.images) ? hotel.images[0] : "",
+        location: getFullAddress(hotel) || hotel.city || "",
+        categoryId: hotel.categoryId || "",
+      },
+    };
+
+    const res = await dispatch(
+      createBooking({ bookingData, idToken, userId: String(userId) })
     );
 
-    // Reset & close
-    setFullName("");
-    setPhone("");
-    setPeople(1);
-    setFromDate("");
-    setToDate("");
-    closeModal();
+    if (createBooking.fulfilled.match(res)) {
+      setFullName("");
+      setPhone("");
+      setPeople(1);
+      setFromDate("");
+      setToDate("");
+      closeModal();
+      alert("Booking submitted ✅ (Pending approval)");
+    }
   };
 
   if (loading && !hotel) {
@@ -136,7 +186,10 @@ export default function HotelDetails() {
 
   return (
     <div className="container py-4">
-      <button className="btn btn-outline-dark mb-3" onClick={() => navigate(-1)}>
+      <button
+        className="btn btn-outline-dark mb-3"
+        onClick={() => navigate(-1)}
+      >
         ← Back
       </button>
 
@@ -188,12 +241,20 @@ export default function HotelDetails() {
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-start gap-2">
                 <h3 className="fw-bold mb-0">{hotel.placeName}</h3>
-                <span className={hotel.isAvailable ? "badge bg-success" : "badge bg-secondary"}>
+                <span
+                  className={
+                    hotel.isAvailable
+                      ? "badge bg-success"
+                      : "badge bg-secondary"
+                  }
+                >
                   {hotel.isAvailable ? "Available" : "Not Available"}
                 </span>
               </div>
 
-              <p className="text-muted mt-2 mb-2">{address || "Address not provided"}</p>
+              <p className="text-muted mt-2 mb-2">
+                {address || "Address not provided"}
+              </p>
 
               <div className="fs-4 fw-bold mb-2">
                 {formatINR(hotel.pricePerNight)}{" "}
@@ -207,7 +268,9 @@ export default function HotelDetails() {
               </div>
 
               <h6 className="fw-bold">About</h6>
-              <p className="text-muted mb-4">{hotel.description || "No description added."}</p>
+              <p className="text-muted mb-4">
+                {hotel.description || "No description added."}
+              </p>
 
               <button
                 className="btn btn-dark w-100"
@@ -225,10 +288,9 @@ export default function HotelDetails() {
         </div>
       </div>
 
-      {/* ✅ BOOTSTRAP MODAL (no extra CSS) */}
+      {/* Modal */}
       {showModal && (
         <>
-          {/* backdrop */}
           <div className="modal-backdrop fade show" onClick={closeModal} />
 
           <div
@@ -241,16 +303,36 @@ export default function HotelDetails() {
               <div className="modal-content">
                 <div className="modal-header">
                   <div>
-                    <h5 className="modal-title mb-0">Book: {hotel.placeName}</h5>
-                    <small className="text-muted">{formatINR(hotel.pricePerNight)} / night</small>
+                    <h5 className="modal-title mb-0">
+                      Book: {hotel.placeName}
+                    </h5>
+                    <small className="text-muted">
+                      {formatINR(hotel.pricePerNight)} / night
+                    </small>
                   </div>
 
-                  <button type="button" className="btn-close" onClick={closeModal} />
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={closeModal}
+                  />
                 </div>
 
                 <form onSubmit={onSubmitBooking}>
                   <div className="modal-body">
-                    {formError && <div className="alert alert-danger py-2">{formError}</div>}
+                    {formError && (
+                      <div className="alert alert-danger py-2">
+                        {formError}
+                      </div>
+                    )}
+                    {bookingError && (
+                      <div className="alert alert-danger py-2">
+                        {bookingError}
+                      </div>
+                    )}
+                    {success && (
+                      <div className="alert alert-success py-2">{success}</div>
+                    )}
 
                     <div className="mb-3">
                       <label className="form-label">Full Name *</label>
@@ -314,7 +396,6 @@ export default function HotelDetails() {
                       </div>
                     </div>
 
-                    {/* Summary */}
                     <div className="mt-3 p-3 bg-light rounded">
                       <div className="d-flex justify-content-between">
                         <span className="text-muted">Nights</span>
@@ -322,7 +403,11 @@ export default function HotelDetails() {
                       </div>
                       <div className="d-flex justify-content-between mt-1">
                         <span className="text-muted">Total</span>
-                        <b>{nights > 0 ? `₹${total.toLocaleString("en-IN")}` : "-"}</b>
+                        <b>
+                          {nights > 0
+                            ? `₹${total.toLocaleString("en-IN")}`
+                            : "-"}
+                        </b>
                       </div>
                       <small className="text-muted d-block mt-2">
                         After submit, booking status will be <b>pending</b>.
@@ -331,11 +416,20 @@ export default function HotelDetails() {
                   </div>
 
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-outline-secondary" onClick={closeModal}>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={closeModal}
+                      disabled={creating}
+                    >
                       Cancel
                     </button>
-                    <button type="submit" className="btn btn-dark">
-                      Submit Booking
+                    <button
+                      type="submit"
+                      className="btn btn-dark"
+                      disabled={creating}
+                    >
+                      {creating ? "Submitting..." : "Submit Booking"}
                     </button>
                   </div>
                 </form>
