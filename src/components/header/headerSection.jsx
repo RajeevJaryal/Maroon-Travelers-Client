@@ -1,36 +1,77 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { logoutUser } from "../../redux/userAuthSlice";
-
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import CartIcon from "./CartIcon";
 import UserIcon from "./UserIcon";
+import "./navbar.css";
 
-const HeaderSection = () => {
+function normalize(text = "") {
+  return text.toLowerCase().trim();
+}
+
+export default function HeaderSection() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const location = useLocation();
+  const { items } = useSelector((s) => s.listings);
 
-  const { idToken, email } = useSelector((s) => s.userAuth || {});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    navigate("/", { replace: true });
-  };
+  const searchRef = useRef(null);
+
+  // Sync search input with URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlSearch = params.get("search") || "";
+    setSearchTerm(urlSearch);
+  }, [location.search]);
+
+  // Close search on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowDropdown(false);
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const suggestions = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    const query = normalize(searchTerm);
+
+    return (items || [])
+      .filter((item) =>
+        normalize(item.placeName || "").includes(query)
+      )
+      .slice(0, 6);
+  }, [searchTerm, items]);
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault(); // ✅ prevent reload
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+
+    navigate(`/listings?search=${encodeURIComponent(searchTerm)}`);
+    setShowDropdown(false);
+    setIsFocused(false);
+  };
+
+  const handleSuggestionClick = (item) => {
+    setSearchTerm(item.placeName);
+    setShowDropdown(false);
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-3 shadow">
-      <div className="container-fluid">
+    <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
+      <div className="container">
 
         {/* Brand */}
-        <Link
-          className="navbar-brand fw-bold"
-          to="/"
-          style={{ color: "#ffffff" }}
-        >
+        <Link className="navbar-brand brand-logo" to="/">
           Maroon Travelers
         </Link>
 
@@ -39,77 +80,138 @@ const HeaderSection = () => {
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navBarContent"
-          aria-controls="navBarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          data-bs-target="#navbarContent"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Content */}
-        <div className="collapse navbar-collapse" id="navBarContent">
+        <div className="collapse navbar-collapse" id="navbarContent">
 
-          {/* Search */}
+          {/* Nav Links */}
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0 nav-links">
+            <li className="nav-item">
+              <Link
+                to="/"
+                className={`nav-link ${
+                  location.pathname === "/" ? "active-link" : ""
+                }`}
+              >
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                to="/listings"
+                className={`nav-link ${
+                  location.pathname === "/listings" ? "active-link" : ""
+                }`}
+              >
+                Listings
+              </Link>
+            </li>
+          </ul>
+
+          {/* ===== DESKTOP SEARCH ===== */}
           <form
             onSubmit={handleSearchSubmit}
-            className="d-flex mx-lg-auto my-3 my-lg-0"
-            style={{ width: "100%", maxWidth: 520 }}
+            className={`search-form d-none d-lg-flex ${
+              isFocused ? "expanded" : ""
+            }`}
+            ref={searchRef}
           >
             <input
-              className="form-control rounded-pill px-4"
               type="search"
               placeholder="Search destinations, hotels..."
+              value={searchTerm}
+              onFocus={() => setIsFocused(true)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSearchTerm(value);
+                setShowDropdown(value.trim().length > 0);
+              }}
+              className="search-input"
             />
-          </form>
 
-          {/* Right Side */}
-          <div className="d-flex align-items-center gap-3 ms-lg-3">
-
-            <CartIcon />
-            <UserIcon />
-
-            {/* Not Logged In */}
-            {!idToken && (
-              <button
-                className="btn btn-outline-light"
-                onClick={() => navigate("/auth")}
-              >
-                Login
-              </button>
-            )}
-
-            {/* Logged In */}
-            {idToken && (
-              <div className="d-flex align-items-center gap-2">
-
-                {/* My Bookings Link */}
-                <Link
-                  to="/my-bookings"
-                  className="btn btn-sm btn-outline-light"
-                >
-                  My Bookings
-                </Link>
-
-                <span className="text-white small d-none d-lg-inline">
-                  {email}
-                </span>
-
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-
+            {showDropdown && suggestions.length > 0 && (
+              <div className="search-dropdown">
+                {suggestions.map((item) => (
+                  <div
+                    key={item.id}
+                    className="dropdown-item"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSuggestionClick(item);
+                    }}
+                  >
+                    <strong>{item.placeName}</strong>
+                    <div className="small text-muted">
+                      ₹{item.pricePerNight} / night
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
+          </form>
 
+          {/* ===== MOBILE SEARCH ICON ===== */}
+          <div className="d-lg-none mobile-search-wrapper position-relative">
+            <button
+              className="mobile-search-btn"
+              onClick={() => setIsFocused((prev) => !prev)}
+            >
+              🔍
+            </button>
+
+            {isFocused && (
+              <form
+                onSubmit={handleSearchSubmit}
+                className="mobile-search-form"
+                ref={searchRef}
+              >
+                <input
+                  type="search"
+                  autoFocus
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchTerm(value);
+                    setShowDropdown(value.trim().length > 0);
+                  }}
+                  className="mobile-search-input"
+                />
+
+                {showDropdown && suggestions.length > 0 && (
+                  <div className="search-dropdown">
+                    {suggestions.map((item) => (
+                      <div
+                        key={item.id}
+                        className="dropdown-item"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSuggestionClick(item);
+                        }}
+                      >
+                        <strong>{item.placeName}</strong>
+                        <div className="small text-muted">
+                          ₹{item.pricePerNight} / night
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </form>
+            )}
           </div>
+
+          {/* Icons */}
+          <div className="nav-icons ms-3">
+            <CartIcon />
+            <UserIcon />
+          </div>
+
         </div>
       </div>
     </nav>
   );
-};
-
-export default HeaderSection;
+}

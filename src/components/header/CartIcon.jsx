@@ -1,9 +1,16 @@
+import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const CartIcon = () => {
+  const navigate = useNavigate();
+
   return (
-    <div style={{ color:"white",fontSize: "24px", cursor: "pointer" }}>
-      <FaShoppingCart />
+    <div
+      style={{ cursor: "pointer", position: "relative" }}
+      onClick={() => navigate("/my-bookings")}
+    >
+      <FaShoppingCart size={24} color="white" />
     </div>
   );
 };

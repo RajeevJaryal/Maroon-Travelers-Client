@@ -6,16 +6,20 @@ import ShowingListing from './components/showingData/showingListing'
 import HotelDetails from './components/detailsSection/HotelDetails';
 import AuthPage from './components/login/AuthPage';
 import OrderHistory from './components/orderhistory/OrderHistory';
+import HomePage from './components/home/HomePage';
+
 function App() {
   return (
     <>
       <HeaderSection />
 
       <Routes>
-        <Route path="/" element={<ShowingListing />} />
+        <Route path='/' element={<HomePage/>}/>
+        <Route path="/listings" element={<ShowingListing />} />
         <Route path="/hotels/:id" element={<HotelDetails />} />
-        <Route path="/auth" element={<AuthPage />} /> 
-        <Route path='/orderHistory' element={<OrderHistory/>}/>
+        <Route path="/login" element={<AuthPage />} /> 
+        <Route path='/my-bookings' element={<OrderHistory/>}/>
+        
       </Routes>
     </>
   )
