@@ -1,0 +1,405 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+/* ─────────────────────────────────────────
+   GLOBAL DARK OVERRIDE
+───────────────────────────────────────── */
+html,
+body {
+  background: #080808 !important;
+  color: white !important;
+  padding-top: 68px;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────
+   NAVBAR BASE
+───────────────────────────────────────── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: 68px;
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.header.scrolled {
+  background: rgba(8, 8, 8, 0.92);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ─────────────────────────────────────────
+   LOGO
+───────────────────────────────────────── */
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+  position: relative;
+  padding-left: 38px;
+  margin-right: 2rem;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #7B1C2E, #C9A84C, #7B1C2E);
+  animation: logoSpin 8s linear infinite;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #080808;
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+
+.header.scrolled .logo::after {
+  background: #0a0a0a;
+}
+
+@keyframes logoSpin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.logo span { color: #C9A84C; }
+
+.logo:hover {
+  opacity: 0.82;
+  color: white;
+}
+
+/* ─────────────────────────────────────────
+   NAV LINKS
+───────────────────────────────────────── */
+.nav-links {
+  display: flex;
+  align-items: center;
+   gap: 1rem; 
+  margin-right: auto; /* ← pushes everything else to the right */
+}
+
+.nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  padding: 6px 18px;
+  border-radius: 8px;
+  letter-spacing: 0.04em;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: #C9A84C;
+  font-weight: 500;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 14px;
+  right: 14px;
+  height: 1.5px;
+  background: #C9A84C;
+  border-radius: 1px;
+}
+
+/* ─────────────────────────────────────────
+   SEARCH
+───────────────────────────────────────── */
+.search-wrapper {
+  position: relative;
+  margin-right: 14px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  padding: 8px 18px;
+  width: 220px;
+  transition:
+    width 0.35s ease,
+    border-color 0.3s,
+    box-shadow 0.3s,
+    background 0.3s;
+}
+
+.search-box.expanded,
+.search-box:focus-within {
+  width: 290px;
+  border-color: rgba(201, 168, 76, 0.45);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.search-icon {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.search-box.expanded .search-icon,
+.search-box:focus-within .search-icon {
+  color: #C9A84C;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  width: 100%;
+  min-width: 0;
+}
+
+.search-input::placeholder { color: rgba(255, 255, 255, 0.28); }
+.search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+/* ─────────────────────────────────────────
+   SEARCH DROPDOWN
+───────────────────────────────────────── */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  min-width: 260px;
+  background: #191919;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  z-index: 1001;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: rgba(201, 168, 76, 0.07); }
+
+.dropdown-item .place {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dropdown-item .place::before {
+  content: '◈';
+  font-size: 10px;
+  color: #C9A84C;
+  flex-shrink: 0;
+}
+
+.dropdown-item .price {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  padding-left: 17px;
+}
+
+/* ─────────────────────────────────────────
+   NAV ICONS ROW
+───────────────────────────────────────── */
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   ICON BTN
+   KEY FIX: this is purely a visual ring.
+   It must NOT intercept pointer events —
+   the CartIcon/UserIcon inside handle clicks.
+───────────────────────────────────────── */
+.icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 16px;
+
+  /* visual ring transitions */
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.15s;
+
+  /* 
+    DO NOT set cursor: pointer here — 
+    let the child (FaUserCircle / FaShoppingCart) own the cursor
+  */
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(201, 168, 76, 0.4);
+  color: #C9A84C;
+  transform: scale(1.08);
+}
+
+/* ─────────────────────────────────────────
+   CHILDREN INSIDE ICON BTN
+   UserIcon / CartIcon fill the full circle
+───────────────────────────────────────── */
+
+/* .user-icon-wrapper fills the button */
+.icon-btn .user-icon-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* CartIcon's wrapping div */
+.icon-btn > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* all SVG icons from react-icons */
+.icon-btn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+  pointer-events: auto; /* ← CRITICAL: react-icons SVGs need this to fire onClick */
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 1.25rem;
+    height: 60px;
+  }
+
+  body { padding-top: 60px; }
+
+  .nav-links { display: none; }
+
+  .logo {
+    font-size: 18px;
+    padding-left: 34px;
+    margin-right: 1rem;
+  }
+
+  .logo::before { width: 22px; height: 22px; }
+  .logo::after  { width: 15px; height: 15px; left: 3.5px; }
+
+  .search-wrapper { margin-right: 10px; }
+
+  .search-box {
+    width: 145px;
+    padding: 7px 12px;
+  }
+
+  .search-box.expanded,
+  .search-box:focus-within {
+    width: 185px;
+  }
+
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .icon-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header { padding: 0 1rem; }
+
+  .search-box { width: 118px; }
+
+  .search-box.expanded,
+  .search-box:focus-within { width: 150px; }
+
+  .nav-icons { gap: 7px; }
+}

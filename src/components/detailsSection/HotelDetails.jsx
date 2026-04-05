@@ -6,7 +6,7 @@ import { fetchListing } from "../../redux/fetchDataSlice";
 import HotelGallery from "./HotelGallery";
 import HotelInfo from "./HotelInfo";
 import BookingModal from "./BookingModal";
-
+import "./HotelDetails.css";
 export default function HotelDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function HotelDetails() {
 
   const hotel = useMemo(
     () => items?.find((x) => String(x.id) === String(id)),
-    [items, id]
+    [items, id],
   );
 
   const [showModal, setShowModal] = useState(false);
@@ -30,8 +30,11 @@ export default function HotelDetails() {
   if (!hotel) return <div>Hotel not found</div>;
 
   return (
-    <div className="container py-4">
-      <button className="btn btn-outline-dark mb-3" onClick={() => navigate(-1)}>
+    <div className="container hotel-details-page py-4">
+      <button
+        className="btn btn-outline-dark mb-3"
+        onClick={() => navigate(-1)}
+      >
         ← Back
       </button>
 

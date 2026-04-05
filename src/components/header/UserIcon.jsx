@@ -3,6 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/userAuthSlice";
 import { useNavigate } from "react-router-dom";
+import "./UserIcon.css";
 
 const UserIcon = () => {
   const [open, setOpen] = useState(false);
@@ -13,7 +14,6 @@ const UserIcon = () => {
 
   const { email, localId } = useSelector((s) => s.userAuth || {});
 
-  // ✅ close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -27,77 +27,42 @@ const UserIcon = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     setOpen(false);
-    navigate("/login"); // change if your login route is different
-  };
-
-  const goToOrders = () => {
-    navigate("/orders"); // make sure this route exists
-    setOpen(false);
-  };
-
-  const goToProfile = () => {
-    navigate("/profile"); // optional
-    setOpen(false);
+    navigate("/login");
   };
 
   return (
-    <div style={{ position: "relative" }} ref={dropdownRef}>
+    <div className="user-icon-wrapper" ref={dropdownRef}>
       <FaUserCircle
         size={28}
-        style={{ color: "white", cursor: "pointer" }}
+        className="user-icon"
         onClick={() => setOpen(!open)}
       />
 
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "40px",
-            background: "#fff",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
-            padding: "10px",
-            borderRadius: "8px",
-            width: "170px",
-            zIndex: 1000,
-          }}
-        >
+        <div className="user-dropdown">
           {localId ? (
             <>
-              <p style={{ margin: "5px 0", fontSize: "13px", color: "#555" }}>
-                {email}
-              </p>
+              <p className="user-email">{email}</p>
 
-              <p
-                style={{ margin: "8px 0", cursor: "pointer" }}
-                onClick={goToProfile}
-              >
+              <p className="dropdown-item" onClick={() => navigate("/profile")}>
                 Profile
               </p>
 
-              <p
-                style={{ margin: "8px 0", cursor: "pointer" }}
-                onClick={goToOrders}
-              >
+              <p className="dropdown-item" onClick={() => navigate("/orders")}>
                 Orders
               </p>
 
-              <p
-                style={{ margin: "8px 0", color: "red", cursor: "pointer" }}
-                onClick={handleLogout}
-              >
+              <p className="dropdown-item logout" onClick={handleLogout}>
                 Logout
               </p>
             </>
           ) : (
-            <>
-              <p
-                style={{ margin: "8px 0", cursor: "pointer" }}
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </p>
-            </>
+            <p
+              className="dropdown-item"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </p>
           )}
         </div>
       )}

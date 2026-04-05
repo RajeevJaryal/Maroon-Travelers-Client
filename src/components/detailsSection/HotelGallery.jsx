@@ -1,44 +1,39 @@
 import React from "react";
-
+import "./HotelGallery.css";
 export default function HotelGallery({ images = [], title }) {
   return (
-    <div className="col-12 col-lg-7">
-      <div className="card border-0 shadow-sm">
+    <div className="col-12 col-lg-7 hotel-gallery">
+      <div className="gallery-card">
+
+        {/* MAIN IMAGE */}
         {images?.[0] ? (
           <img
             src={images[0]}
             alt={title}
-            className="card-img-top"
-            style={{ height: 360, objectFit: "cover" }}
+            className="gallery-main-img"
           />
         ) : (
-          <div
-            className="d-flex align-items-center justify-content-center bg-light text-muted"
-            style={{ height: 360 }}
-          >
+          <div className="gallery-no-img">
             No image
           </div>
         )}
 
+        {/* THUMBNAILS */}
         {images.length > 1 && (
-          <div className="card-body">
-            <div className="d-flex gap-2 flex-wrap">
+          <div className="gallery-body">
+            <div className="gallery-thumbs">
               {images.slice(1, 6).map((src, idx) => (
                 <img
                   key={idx}
                   src={src}
                   alt={`preview-${idx}`}
-                  style={{
-                    width: 92,
-                    height: 72,
-                    objectFit: "cover",
-                    borderRadius: 10,
-                  }}
+                  className="gallery-thumb"
                 />
               ))}
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

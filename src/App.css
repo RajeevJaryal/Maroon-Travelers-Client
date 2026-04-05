@@ -1,0 +1,497 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+/* ─────────────────────────────────────────
+   CSS VARIABLES — single source of truth
+───────────────────────────────────────── */
+:root {
+  --maroon:        #7B1C2E;
+  --maroon-deep:   #4A0E1A;
+  --maroon-light:  #C13251;
+  --gold:          #C9A84C;
+  --gold-light:    #E8CC7A;
+  --bg-primary:    #080808;
+  --bg-secondary:  #0e0e0e;
+  --bg-card:       #131313;
+  --bg-elevated:   #1a1a1a;
+  --text-primary:  #ffffff;
+  --text-muted:    rgba(255, 255, 255, 0.45);
+  --text-faint:    rgba(255, 255, 255, 0.22);
+  --border:        rgba(255, 255, 255, 0.07);
+  --border-gold:   rgba(201, 168, 76, 0.35);
+  --font-display:  'Cormorant Garamond', serif;
+  --font-body:     'DM Sans', sans-serif;
+  --radius-sm:     8px;
+  --radius-md:     12px;
+  --radius-lg:     20px;
+  --radius-pill:   100px;
+  --nav-height:    68px;
+}
+
+/* ─────────────────────────────────────────
+   HARD RESET — beats Bootstrap completely
+───────────────────────────────────────── */
+html {
+  background: var(--bg-primary) !important;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-top: var(--nav-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  background: var(--bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─────────────────────────────────────────
+   BOOTSTRAP OVERRIDES
+───────────────────────────────────────── */
+
+/* Bootstrap default white bg */
+.container,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
+  background: transparent !important;
+}
+
+/* Bootstrap cards */
+.card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.card-body {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+/* Bootstrap text utilities */
+.text-muted,
+.text-secondary {
+  color: var(--text-muted) !important;
+}
+
+.text-dark {
+  color: var(--text-primary) !important;
+}
+
+/* Bootstrap form controls */
+.form-control,
+.form-select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-faint) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: var(--border-gold) !important;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1) !important;
+  color: white !important;
+}
+
+/* Bootstrap buttons */
+.btn-primary {
+  background: var(--maroon) !important;
+  border-color: var(--maroon) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background: var(--maroon-light) !important;
+  border-color: var(--maroon-light) !important;
+}
+
+.btn-outline-primary {
+  border-color: var(--border-gold) !important;
+  color: var(--gold) !important;
+  background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+  background: rgba(201, 168, 76, 0.1) !important;
+  color: var(--gold) !important;
+}
+
+/* Bootstrap modal */
+.modal-content {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--border) !important;
+}
+
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Bootstrap nav / tabs */
+.nav-tabs {
+  border-color: var(--border) !important;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-muted) !important;
+}
+
+.nav-tabs .nav-link.active {
+  background: var(--bg-card) !important;
+  border-color: var(--border) var(--border) var(--bg-card) !important;
+  color: var(--gold) !important;
+}
+
+/* Bootstrap badges */
+.badge {
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+}
+
+.badge.bg-success  { background: rgba(16, 185, 129, 0.18) !important; color: #34d399 !important; border: 1px solid rgba(52,211,153,0.3) !important; }
+.badge.bg-danger   { background: rgba(239, 68, 68, 0.18) !important;  color: #f87171 !important; border: 1px solid rgba(239,68,68,0.3) !important; }
+.badge.bg-warning  { background: rgba(201, 168, 76, 0.18) !important; color: var(--gold) !important; border: 1px solid var(--border-gold) !important; }
+.badge.bg-primary  { background: rgba(123, 28, 46, 0.25) !important;  color: #f4a0b0 !important; border: 1px solid rgba(123,28,46,0.4) !important; }
+.badge.bg-secondary{ background: rgba(255,255,255,0.07) !important;   color: var(--text-muted) !important; border: 1px solid var(--border) !important; }
+
+/* Bootstrap alerts */
+.alert {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Bootstrap table */
+.table {
+  color: var(--text-primary) !important;
+}
+
+.table > :not(caption) > * > * {
+  background: transparent !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+  background: rgba(201, 168, 76, 0.05) !important;
+}
+
+/* Bootstrap dropdown */
+.dropdown-menu {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dropdown-item {
+  color: var(--text-muted) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(201, 168, 76, 0.08) !important;
+  color: var(--gold) !important;
+}
+
+.dropdown-divider {
+  border-color: var(--border) !important;
+}
+
+/* Bootstrap list-group */
+.list-group-item {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Bootstrap pagination */
+.page-link {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+.page-link:hover {
+  background: rgba(201, 168, 76, 0.1) !important;
+  color: var(--gold) !important;
+}
+
+.page-item.active .page-link {
+  background: var(--maroon) !important;
+  border-color: var(--maroon) !important;
+  color: white !important;
+}
+
+/* ─────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--maroon); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--maroon-light); }
+
+/* ─────────────────────────────────────────
+   GLOBAL TYPOGRAPHY
+───────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.3px;
+}
+
+p {
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--gold);
+}
+
+/* ─────────────────────────────────────────
+   GLOBAL UTILITY CLASSES
+   (use these across all your components)
+───────────────────────────────────────── */
+
+/* Section wrapper */
+.section {
+  padding: 4rem 2.5rem;
+  background: var(--bg-secondary);
+}
+
+.section-alt {
+  padding: 4rem 2.5rem;
+  background: var(--bg-primary);
+}
+
+/* Gold accent text */
+.text-gold    { color: var(--gold) !important; }
+.text-maroon  { color: var(--maroon-light) !important; }
+
+/* Dark card */
+.dark-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s, border-color 0.3s;
+}
+
+.dark-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-gold);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.65);
+}
+
+/* Gold pill badge */
+.badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: var(--radius-pill);
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Available / unavailable dots */
+.badge-available {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.badge-unavailable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Primary maroon button */
+.btn-maroon {
+  padding: 11px 28px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(123, 28, 46, 0.9), rgba(180, 40, 70, 0.75));
+  border: 1px solid var(--border-gold);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-maroon:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 0 28px rgba(123, 28, 46, 0.5);
+  color: white;
+}
+
+.btn-maroon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ghost / outline button */
+.btn-ghost {
+  padding: 11px 28px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ghost:hover {
+  background: rgba(201, 168, 76, 0.1);
+  transform: scale(1.02);
+  color: var(--gold);
+}
+
+/* Divider line */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 1.5rem 0;
+}
+
+/* ─────────────────────────────────────────
+   GRAIN OVERLAY  (add to any page wrapper)
+   Usage: <div className="grain-bg"> ... </div>
+───────────────────────────────────────── */
+.grain-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.45;
+}
+
+/* ─────────────────────────────────────────
+   PAGE TRANSITION WRAPPER
+   Wrap each route page in <div className="page-wrapper">
+───────────────────────────────────────── */
+.page-wrapper {
+  min-height: calc(100vh - var(--nav-height));
+  background: var(--bg-secondary);
+  position: relative;
+}
+
+/* ─────────────────────────────────────────
+   SELECTION COLOR
+───────────────────────────────────────── */
+::selection {
+  background: rgba(201, 168, 76, 0.25);
+  color: white;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px;
+    font-size: 14px;
+  }
+
+  :root {
+    --nav-height: 60px;
+  }
+
+  .section,
+  .section-alt {
+    padding: 3rem 1.25rem;
+  }
+}
+.page-loader {
+  height: calc(100vh - 68px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+}

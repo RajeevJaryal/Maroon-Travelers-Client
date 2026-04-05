@@ -1,4 +1,5 @@
 import React from "react";
+import "./listingsHeader.css";
 
 export default function ListingsHeader({
   total,
@@ -9,18 +10,21 @@ export default function ListingsHeader({
   setShowFilters,
 }) {
   return (
-    <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-      <div>
-        <h3 className="fw-bold mb-0">Explore Listings</h3>
-        <small className="text-muted">
+    <div className="listings-header">
+
+      {/* LEFT */}
+      <div className="listings-header-left">
+        <h3 className="listings-title">Explore Listings</h3>
+        <span className="listings-subtitle">
           Showing {showing} of {total}
-        </small>
+        </span>
       </div>
 
-      <div className="d-flex gap-2">
+      {/* RIGHT */}
+      <div className="listings-header-right">
+
         <select
-          className="form-select"
-          style={{ width: 200 }}
+          className="listings-sort"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
@@ -30,9 +34,13 @@ export default function ListingsHeader({
           <option value="name">Name: A → Z</option>
         </select>
 
-        <button className="btn btn-dark" onClick={() => setShowFilters(!showFilters)}>
+        <button
+          className="listings-filter-btn"
+          onClick={() => setShowFilters(!showFilters)}
+        >
           {showFilters ? "Close" : "Filters"}
         </button>
+
       </div>
     </div>
   );

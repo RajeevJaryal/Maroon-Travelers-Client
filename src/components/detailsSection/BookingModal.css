@@ -1,0 +1,419 @@
+/* ─────────────────────────────────────────
+   MODAL ROOT WRAPPER
+───────────────────────────────────────── */
+
+.booking-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─────────────────────────────────────────
+   BACKDROP
+───────────────────────────────────────── */
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1051;
+  animation: backdropFade 0.25s ease both;
+  pointer-events: all; /* ✅ IMPORTANT */
+}
+@keyframes backdropFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─────────────────────────────────────────
+   MODAL CONTAINER  (centers the box)
+───────────────────────────────────────── */
+
+.modal-container {
+  position: relative;
+  z-index: 1052;
+  width: 100%;
+  max-width: 480px;
+  padding: 1rem;
+  animation: modalPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.87) translateY(28px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* ─────────────────────────────────────────
+   MODAL BOX
+───────────────────────────────────────── */
+
+.modal-box {
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(201, 168, 76, 0.06);
+  position: relative;
+  max-height: 80vh;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  pointer-events: all;
+}
+
+/* gold top accent line */
+.modal-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.55),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   MODAL HEADER
+───────────────────────────────────────── */
+
+.modal-header-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.modal-header-custom h5 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 360px;
+}
+
+.modal-header-custom h5::before {
+  content: '◈';
+  font-size: 12px;
+  color: #C9A84C;
+  font-family: 'DM Sans', sans-serif;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   CLOSE BUTTON
+───────────────────────────────────────── */
+
+.modal-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* ─────────────────────────────────────────
+   MODAL BODY
+───────────────────────────────────────── */
+
+.modal-body-custom {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;        
+  min-height: 0;
+  
+}
+
+/* ─────────────────────────────────────────
+   ERROR BOX
+───────────────────────────────────────── */
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  color: #f87171;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  animation: slideDown 0.25s ease both;
+}
+
+.error-box::before {
+  content: '⚠';
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────
+   INPUT FIELDS
+───────────────────────────────────────── */
+
+.input-field {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  padding: 11px 14px;
+  outline: none;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s,
+    background 0.25s;
+  -moz-appearance: textfield;
+}
+
+.input-field::-webkit-outer-spin-button,
+.input-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.input-field:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.input-field:focus {
+  border-color: rgba(201, 168, 76, 0.48);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* gold-tinted calendar icon on date inputs */
+.input-field[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.55) sepia(1) hue-rotate(5deg) saturate(3);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.input-field[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────
+   BOOKING SUMMARY
+───────────────────────────────────────── */
+
+.booking-summary {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.booking-summary b {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
+  margin-left: 4px;
+}
+
+/* ─────────────────────────────────────────
+   MODAL FOOTER
+───────────────────────────────────────── */
+
+.modal-footer-custom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ─────────────────────────────────────────
+   CANCEL BUTTON
+───────────────────────────────────────── */
+
+.btn-cancel {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  color: rgba(255, 255, 255, 0.5);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+/* ─────────────────────────────────────────
+   SUBMIT BUTTON
+───────────────────────────────────────── */
+
+.btn-submit {
+  padding: 10px 26px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(123, 28, 46, 0.92),
+    rgba(180, 40, 70, 0.72)
+  );
+  border: 1px solid rgba(201, 168, 76, 0.32);
+  color: white;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 0 28px rgba(123, 28, 46, 0.55);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* shimmer while submitting */
+.btn-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+  background: linear-gradient(
+    90deg,
+    rgba(123, 28, 46, 0.6) 0%,
+    rgba(180, 40, 70, 0.4) 40%,
+    rgba(201, 168, 76, 0.15) 50%,
+    rgba(180, 40, 70, 0.4) 60%,
+    rgba(123, 28, 46, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: btnShimmer 1.4s linear infinite;
+}
+
+@keyframes btnShimmer {
+  0%   { background-position:  200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+
+@media (max-width: 520px) {
+  .modal-container {
+    padding: 0.75rem;
+  }
+
+  .modal-box {
+    border-radius: 18px;
+  }
+
+  .modal-header-custom,
+  .modal-body-custom,
+  .modal-footer-custom {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .modal-header-custom h5 {
+    font-size: 18px;
+    max-width: 220px;
+  }
+
+  .modal-footer-custom {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import CartIcon from "./CartIcon";
 import UserIcon from "./UserIcon";
-import "./navbar.css";
+import "./header.css";
 
 function normalize(text = "") {
   return text.toLowerCase().trim();
@@ -17,17 +18,24 @@ export default function HeaderSection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const searchRef = useRef(null);
 
-  // Sync search input with URL
+  // Sync URL search
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const urlSearch = params.get("search") || "";
-    setSearchTerm(urlSearch);
+    setSearchTerm(params.get("search") || "");
   }, [location.search]);
 
-  // Close search on outside click
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -35,7 +43,6 @@ export default function HeaderSection() {
         setIsFocused(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
@@ -61,157 +68,99 @@ export default function HeaderSection() {
     setIsFocused(false);
   };
 
-  const handleSuggestionClick = (item) => {
-    setSearchTerm(item.placeName);
-    setShowDropdown(false);
-  };
-
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
-      <div className="container">
+    <motion.nav
+      className={`header ${scrolled ? "scrolled" : ""}`}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      {/* LOGO */}
+      <Link to="/" className="logo">
+        Maroon <span>Travelers</span>
+      </Link>
 
-        {/* Brand */}
-        <Link className="navbar-brand brand-logo" to="/">
-          Maroon Travelers
-        </Link>
+      {/* NAV LINKS */}
+      <div className="nav-links">
+        {["Home", "Listings"].map((item) => {
+          const path = item === "Home" ? "/" : "/listings";
+          const active = location.pathname === path;
 
-        {/* Mobile Toggle */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarContent">
-
-          {/* Nav Links */}
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 nav-links">
-            <li className="nav-item">
-              <Link
-                to="/"
-                className={`nav-link ${
-                  location.pathname === "/" ? "active-link" : ""
-                }`}
-              >
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/listings"
-                className={`nav-link ${
-                  location.pathname === "/listings" ? "active-link" : ""
-                }`}
-              >
-                Listings
-              </Link>
-            </li>
-          </ul>
-
-          {/* ===== DESKTOP SEARCH ===== */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className={`search-form d-none d-lg-flex ${
-              isFocused ? "expanded" : ""
-            }`}
-            ref={searchRef}
-          >
-            <input
-              type="search"
-              placeholder="Search destinations, hotels..."
-              value={searchTerm}
-              onFocus={() => setIsFocused(true)}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSearchTerm(value);
-                setShowDropdown(value.trim().length > 0);
-              }}
-              className="search-input"
-            />
-
-            {showDropdown && suggestions.length > 0 && (
-              <div className="search-dropdown">
-                {suggestions.map((item) => (
-                  <div
-                    key={item.id}
-                    className="dropdown-item"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleSuggestionClick(item);
-                    }}
-                  >
-                    <strong>{item.placeName}</strong>
-                    <div className="small text-muted">
-                      ₹{item.pricePerNight} / night
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </form>
-
-          {/* ===== MOBILE SEARCH ICON ===== */}
-          <div className="d-lg-none mobile-search-wrapper position-relative">
-            <button
-              className="mobile-search-btn"
-              onClick={() => setIsFocused((prev) => !prev)}
+          return (
+            <Link
+              key={item}
+              to={path}
+              className={`nav-link ${active ? "active" : ""}`}
             >
-              🔍
-            </button>
+              {item}
+            </Link>
+          );
+        })}
+      </div>
 
-            {isFocused && (
-              <form
-                onSubmit={handleSearchSubmit}
-                className="mobile-search-form"
-                ref={searchRef}
-              >
-                <input
-                  type="search"
-                  autoFocus
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSearchTerm(value);
-                    setShowDropdown(value.trim().length > 0);
+      {/* SEARCH */}
+      <div className="search-wrapper" ref={searchRef}>
+        <motion.form
+          onSubmit={handleSearchSubmit}
+          className={`search-box ${isFocused ? "expanded" : ""}`}
+        >
+          <span className="search-icon">⌕</span>
+
+          <input
+            type="search"
+            placeholder="Search destinations..."
+            value={searchTerm}
+            onFocus={() => setIsFocused(true)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchTerm(value);
+              setShowDropdown(value.trim().length > 0);
+            }}
+            className="search-input"
+          />
+        </motion.form>
+
+        <AnimatePresence>
+          {showDropdown && suggestions.length > 0 && (
+            <motion.div
+              className="search-dropdown"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              {suggestions.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  className="dropdown-item"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setSearchTerm(item.placeName);
+                    setShowDropdown(false);
                   }}
-                  className="mobile-search-input"
-                />
-
-                {showDropdown && suggestions.length > 0 && (
-                  <div className="search-dropdown">
-                    {suggestions.map((item) => (
-                      <div
-                        key={item.id}
-                        className="dropdown-item"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleSuggestionClick(item);
-                        }}
-                      >
-                        <strong>{item.placeName}</strong>
-                        <div className="small text-muted">
-                          ₹{item.pricePerNight} / night
-                        </div>
-                      </div>
-                    ))}
+                >
+                  <div className="place">{item.placeName}</div>
+                  <div className="price">
+                    ₹{item.pricePerNight} / night
                   </div>
-                )}
-              </form>
-            )}
-          </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-          {/* Icons */}
-          <div className="nav-icons ms-3">
-            <CartIcon />
-            <UserIcon />
-          </div>
-
+      {/* ICONS */}
+      <div className="nav-icons">
+        <div className="icon-btn">
+          <CartIcon />
+        </div>
+        <div className="icon-btn">
+          <UserIcon />
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

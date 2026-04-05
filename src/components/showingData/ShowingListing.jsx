@@ -9,6 +9,8 @@ import ListingsFilters from "./ListingsFilters";
 import ListingGrid from "./ListingGrid";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import "./showingListing.css"; // ✅ NEW CSS
+
 function normalize(text = "") {
   return text.toString().toLowerCase().trim();
 }
@@ -26,7 +28,6 @@ export default function ShowingListing() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Listings + categories from redux
   const {
     items: listings = [],
     loading,
@@ -34,11 +35,9 @@ export default function ShowingListing() {
   } = useSelector((s) => s.listings || {});
   const { items: categories = [] } = useSelector((s) => s.categories || {});
 
-  // URL search
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = normalize(queryParams.get("search") || "");
 
-  // Filters
   const [showFilters, setShowFilters] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [minPrice, setMinPrice] = useState("");
@@ -46,7 +45,6 @@ export default function ShowingListing() {
   const [availability, setAvailability] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  // Pagination
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
@@ -57,43 +55,38 @@ export default function ShowingListing() {
 
   const safeItems = useMemo(
     () => (Array.isArray(listings) ? listings : []),
-    [listings],
+    [listings]
   );
 
-  // Filter + search + sort logic
   const filteredItems = useMemo(() => {
     let list = [...safeItems];
 
-    // Search
     if (searchQuery) {
       const keywords = searchQuery.split(" ").filter(Boolean);
       list = list.filter((item) =>
-        keywords.every((word) => getSearchableText(item).includes(word)),
+        keywords.every((word) => getSearchableText(item).includes(word))
       );
     }
 
-    // Category filter
     if (categoryId) {
       list = list.filter((item) => item.categoryId === categoryId);
     }
 
-    // Price filter
     if (minPrice)
       list = list.filter(
-        (item) => Number(item.pricePerNight) >= Number(minPrice),
-      );
-    if (maxPrice)
-      list = list.filter(
-        (item) => Number(item.pricePerNight) <= Number(maxPrice),
+        (item) => Number(item.pricePerNight) >= Number(minPrice)
       );
 
-    // Availability filter
+    if (maxPrice)
+      list = list.filter(
+        (item) => Number(item.pricePerNight) <= Number(maxPrice)
+      );
+
     if (availability !== "all") {
       const want = availability === "available";
       list = list.filter((item) => item.isAvailable === want);
     }
 
-    // Sort
     const sorted = [...list];
     if (sortBy === "priceLow")
       sorted.sort((a, b) => a.pricePerNight - b.pricePerNight);
@@ -101,12 +94,13 @@ export default function ShowingListing() {
       sorted.sort((a, b) => b.pricePerNight - a.pricePerNight);
     else if (sortBy === "name")
       sorted.sort((a, b) =>
-        (a.placeName || "").localeCompare(b.placeName || ""),
+        (a.placeName || "").localeCompare(b.placeName || "")
       );
     else
       sorted.sort(
         (a, b) =>
-          (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0),
+          (b.updatedAt || b.createdAt || 0) -
+          (a.updatedAt || a.createdAt || 0)
       );
 
     return sorted;
@@ -120,8 +114,8 @@ export default function ShowingListing() {
     sortBy,
   ]);
 
-  // Paging
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / pageSize));
+
   const pagedItems = useMemo(() => {
     const start = (page - 1) * pageSize;
     return filteredItems.slice(start, start + pageSize);
@@ -141,22 +135,19 @@ export default function ShowingListing() {
   };
 
   return (
-    <div className="container py-4">
-      {/* HEADER + FILTER BUTTON */}
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <ListingsHeader
-          total={safeItems.length}
-          showing={filteredItems.length}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
-          searchQuery={searchQuery}
-          clearSearch={() => navigate("/listings")}
-        />
-      </div>
+    <div className="listing-page">
 
-      {/* FILTER PANEL */}
+      {/* HEADER */}
+      <ListingsHeader
+        total={safeItems.length}
+        showing={filteredItems.length}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+      />
+
+      {/* FILTERS */}
       {showFilters && (
         <ListingsFilters
           q={searchQuery}
@@ -178,11 +169,11 @@ export default function ShowingListing() {
       )}
 
       {/* ERROR */}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="listing-error">{error}</div>}
 
       {/* LOADING */}
       {loading && (
-        <div className="row row-cols-1 row-cols-md-3 g-4">
+        <div className="listing-grid">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
@@ -191,13 +182,10 @@ export default function ShowingListing() {
 
       {/* EMPTY */}
       {!loading && filteredItems.length === 0 && (
-        <div className="text-center py-5">
+        <div className="listing-empty">
           <h4>No results found</h4>
-          <p className="text-muted">Try adjusting your filters.</p>
-          <button
-            className="btn btn-outline-dark mt-3"
-            onClick={() => navigate("/listings")}
-          >
+          <p>Try adjusting your filters.</p>
+          <button onClick={() => navigate("/listings")}>
             Clear Search
           </button>
         </div>
@@ -209,42 +197,32 @@ export default function ShowingListing() {
           <ListingGrid items={pagedItems} />
 
           {/* PAGINATION */}
-          <div className="d-flex justify-content-center mt-4">
-            <ul className="pagination">
-              {/* Previous */}
-              <li className={`page-item ${page <= 1 ? "disabled" : ""}`}>
-                <button
-                  className="page-link"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                >
-                  Prev
-                </button>
-              </li>
+          <div className="listing-pagination">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              Prev
+            </button>
 
-              {/* Page Numbers */}
-              {Array.from({ length: totalPages }, (_, i) => (
-                <li
-                  key={i}
-                  className={`page-item ${page === i + 1 ? "active" : ""}`}
-                >
-                  <button className="page-link" onClick={() => setPage(i + 1)}>
-                    {i + 1}
-                  </button>
-                </li>
-              ))}
-
-              {/* Next */}
-              <li
-                className={`page-item ${page >= totalPages ? "disabled" : ""}`}
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={page === i + 1 ? "active" : ""}
+                onClick={() => setPage(i + 1)}
               >
-                <button
-                  className="page-link"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              disabled={page >= totalPages}
+              onClick={() =>
+                setPage((p) => Math.min(totalPages, p + 1))
+              }
+            >
+              Next
+            </button>
           </div>
         </>
       )}

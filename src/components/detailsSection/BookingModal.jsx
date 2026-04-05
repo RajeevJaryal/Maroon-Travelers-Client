@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createBooking, clearBookingStatus } from "../../redux/bookingsSlice";
 import { formatINR, daysBetween } from "./bookingUtils";
+import "./BookingModal.css";
 
 export default function BookingModal({ show, onClose, hotel }) {
   const dispatch = useDispatch();
@@ -17,6 +18,16 @@ export default function BookingModal({ show, onClose, hotel }) {
   const [toDate, setToDate] = useState("");
   const [formError, setFormError] = useState("");
 
+  // ✅ Lock background scroll
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
+
   if (!show || !hotel) return null;
 
   const nights = fromDate && toDate ? daysBetween(fromDate, toDate) : 0;
@@ -29,7 +40,6 @@ export default function BookingModal({ show, onClose, hotel }) {
     if (!userId) return setFormError("Please login again.");
     if (nights <= 0) return setFormError("Please select valid dates.");
 
-    // 🔥 SAFE IMAGE DETECTION
     const hotelImage =
       hotel.imageUrl ||
       hotel.image ||
@@ -49,8 +59,6 @@ export default function BookingModal({ show, onClose, hotel }) {
       totalPrice: total,
       status: "pending",
       createdAt: Date.now(),
-
-      // ✅ Proper snapshot
       listingSnapshot: {
         title: hotel.placeName || hotel.title || "Apartment",
         image: hotelImage,
@@ -65,88 +73,59 @@ export default function BookingModal({ show, onClose, hotel }) {
   };
 
   return (
-    <>
-      <div className="modal-backdrop fade show" onClick={onClose} />
-      <div className="modal fade show" style={{ display: "block" }}>
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5>Book: {hotel.placeName || hotel.title}</h5>
-              <button className="btn-close" onClick={onClose} />
+    <div className="booking-modal">
+      <div className="modal-backdrop-custom" onClick={onClose} />
+
+      <div className="modal-container">
+        <div className="modal-box">
+
+          
+
+          {/* ✅ IMPORTANT: form is flex */}
+          <form className="modal-form" onSubmit={onSubmitBooking}>
+            <div className="modal-header-custom">
+            <h5>Book: {hotel?.placeName || hotel?.title}</h5>
+            <button className="modal-close-btn" onClick={onClose}>✕</button>
+          </div>
+            <div className="modal-body-custom">
+              {formError && <div className="error-box">{formError}</div>}
+
+              <input className="input-field" placeholder="Full Name"
+                value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+
+              <input className="input-field" placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                required />
+
+              <input type="number" min="1" className="input-field"
+                value={people} onChange={(e) => setPeople(Number(e.target.value))} required />
+
+              <input type="date" className="input-field"
+                value={fromDate} onChange={(e) => setFromDate(e.target.value)} required />
+
+              <input type="date" className="input-field"
+                value={toDate} onChange={(e) => setToDate(e.target.value)} required />
+
+              <div className="booking-summary">
+                Nights: <b>{nights || "-"}</b><br />
+                Total: <b>{nights ? formatINR(total) : "-"}</b>
+              </div>
             </div>
 
-            <form onSubmit={onSubmitBooking}>
-              <div className="modal-body">
-                {formError && (
-                  <div className="alert alert-danger">{formError}</div>
-                )}
+            <div className="modal-footer-custom">
+              <button type="button" className="btn-cancel" onClick={onClose}>
+                Cancel
+              </button>
+              <button type="submit" className="btn-submit" disabled={creating}>
+                {creating ? "Submitting..." : "Submit Booking"}
+              </button>
+            </div>
 
-                <input
-                  className="form-control mb-2"
-                  placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                />
+          </form>
 
-                <input
-                  className="form-control mb-2"
-                  placeholder="Phone"
-                  value={phone}
-                  onChange={(e) =>
-                    setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
-                  }
-                  required
-                />
-
-                <input
-                  type="number"
-                  min="1"
-                  className="form-control mb-2"
-                  placeholder="Number of People"
-                  value={people}
-                  onChange={(e) => setPeople(Number(e.target.value))}
-                  required
-                />
-
-                <input
-                  type="date"
-                  className="form-control mb-2"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                  required
-                />
-
-                <input
-                  type="date"
-                  className="form-control mb-2"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                  required
-                />
-
-                <div className="mt-3">
-                  Nights: <b>{nights || "-"}</b> <br />
-                  Total: <b>{nights ? formatINR(total) : "-"}</b>
-                </div>
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={onClose}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-dark">
-                  {creating ? "Submitting..." : "Submit Booking"}
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

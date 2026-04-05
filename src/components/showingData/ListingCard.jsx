@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./ListingCard.css";
 
 function formatINR(value) {
   const n = Number(value || 0);
@@ -27,52 +28,49 @@ export default function ListingCard({ item }) {
   const openDetails = () => navigate(`/hotels/${item.id}`);
 
   return (
-    <div className="col">
-      <div
-        className="card h-100 shadow-sm border-0"
-        role="button"
-        onClick={openDetails}
-        style={{ cursor: "pointer" }}
-      >
+    <div className="listing-col">
+      <div className="listing-card" onClick={openDetails}>
+
         {img && (
-          <img
-            src={img}
-            alt={item.placeName}
-            className="card-img-top"
-            style={{ height: 220, objectFit: "cover" }}
-          />
+          <div className="listing-image">
+            <img src={img} loading="lazy" alt={item.placeName} />
+          </div>
         )}
 
-        <div className="card-body d-flex flex-column">
-          <div className="d-flex justify-content-between align-items-start mb-2">
-            <h5 className="fw-bold mb-0">{item.placeName}</h5>
-            <span className={item.isAvailable ? "badge bg-success" : "badge bg-secondary"}>
+        <div className="listing-content">
+
+          <div className="listing-top">
+            <h5>{item.placeName}</h5>
+
+            <span className={`status-badge ${item.isAvailable ? "available" : "unavailable"}`}>
               {item.isAvailable ? "Available" : "Not Available"}
             </span>
           </div>
 
-          <small className="text-muted mb-2">
+          <p className="listing-address">
             {fullAddress || "Address not provided"}
-          </small>
+          </p>
 
-          <p className="fw-semibold mb-2">{formatINR(item.pricePerNight)} / night</p>
+          <p className="listing-price">
+            {formatINR(item.pricePerNight)} <span>/ night</span>
+          </p>
 
-          <p className="text-muted small flex-grow-1">
+          <p className="listing-desc">
             {item.description
               ? item.description.slice(0, 100) + (item.description.length > 100 ? "..." : "")
               : "No description available"}
           </p>
 
-          {/* Important: stop click bubbling so card click doesn't also fire */}
           <button
-            className="btn btn-outline-dark mt-auto"
+            className="listing-btn"
             onClick={(e) => {
               e.stopPropagation();
               openDetails();
             }}
           >
-            View Details
+            View Details →
           </button>
+
         </div>
       </div>
     </div>

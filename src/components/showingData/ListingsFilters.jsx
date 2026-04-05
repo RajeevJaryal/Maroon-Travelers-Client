@@ -1,4 +1,5 @@
 import React from "react";
+import "./listingsFilters.css";
 
 export default function ListingsFilters({
   q,
@@ -18,13 +19,13 @@ export default function ListingsFilters({
   onReset,
 }) {
   return (
-    <div className="card shadow-sm mb-4">
-      <div className="card-body">
+    <div className="filters-card">
+      <div className="filters-body">
 
         {/* Top Row */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Filters</h5>
-          <span className="badge text-bg-dark">
+        <div className="filters-header">
+          <h5>Filters</h5>
+          <span className="filters-badge">
             {totalResults} Results
           </span>
         </div>
@@ -33,9 +34,9 @@ export default function ListingsFilters({
 
           {/* Search */}
           <div className="col-md-4">
-            <label className="form-label">Search</label>
+            <label className="filter-label">Search</label>
             <input
-              className="form-control"
+              className="filter-input"
               placeholder="Search place, city, pin..."
               value={q}
               onChange={(e) => setQ(e.target.value)}
@@ -44,9 +45,9 @@ export default function ListingsFilters({
 
           {/* Category */}
           <div className="col-md-3">
-            <label className="form-label">Category</label>
+            <label className="filter-label">Category</label>
             <select
-              className="form-select"
+              className="filter-select"
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
             >
@@ -61,10 +62,10 @@ export default function ListingsFilters({
 
           {/* Min Price */}
           <div className="col-md-2">
-            <label className="form-label">Min Price</label>
+            <label className="filter-label">Min Price</label>
             <input
               type="number"
-              className="form-control"
+              className="filter-input"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               placeholder="0"
@@ -73,10 +74,10 @@ export default function ListingsFilters({
 
           {/* Max Price */}
           <div className="col-md-2">
-            <label className="form-label">Max Price</label>
+            <label className="filter-label">Max Price</label>
             <input
               type="number"
-              className="form-control"
+              className="filter-input"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               placeholder="50000"
@@ -85,9 +86,9 @@ export default function ListingsFilters({
 
           {/* Availability */}
           <div className="col-md-3">
-            <label className="form-label">Availability</label>
+            <label className="filter-label">Availability</label>
             <select
-              className="form-select"
+              className="filter-select"
               value={availability}
               onChange={(e) => setAvailability(e.target.value)}
             >
@@ -99,9 +100,9 @@ export default function ListingsFilters({
 
           {/* Sort */}
           <div className="col-md-3">
-            <label className="form-label">Sort By</label>
+            <label className="filter-label">Sort By</label>
             <select
-              className="form-select"
+              className="filter-select"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
             >
@@ -114,7 +115,7 @@ export default function ListingsFilters({
 
           {/* Reset */}
           <div className="col-md-2 d-flex align-items-end">
-            <button className="btn btn-outline-secondary w-100" onClick={onReset}>
+            <button className="filter-reset-btn w-100" onClick={onReset}>
               Reset
             </button>
           </div>

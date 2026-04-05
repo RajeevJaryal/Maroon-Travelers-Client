@@ -1,0 +1,326 @@
+/* ─────────────────────────────────────────
+   INFO COLUMN WRAPPER
+───────────────────────────────────────── */
+
+.col-12.col-lg-5 {
+  animation: infoSlideIn 0.65s ease 0.1s both;
+}
+
+@keyframes infoSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0px);
+  }
+}
+
+/* ─────────────────────────────────────────
+   INFO CARD SHELL
+───────────────────────────────────────── */
+
+.hotel-info-card {
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  height: 100%;
+  position: relative;
+}
+
+/* subtle gold top accent line */
+.hotel-info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.6),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   INFO BODY
+───────────────────────────────────────── */
+
+.hotel-info-body {
+  padding: 28px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+}
+
+/* ─────────────────────────────────────────
+   HEADER ROW  (title + badge)
+───────────────────────────────────────── */
+
+.hotel-info-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.hotel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.4px;
+  flex: 1;
+}
+
+/* ─────────────────────────────────────────
+   AVAILABILITY BADGE
+───────────────────────────────────────── */
+
+.hotel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* pulsing dot */
+.hotel-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hotel-badge.available {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.hotel-badge.available::before {
+  background: #34d399;
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+
+.hotel-badge.not-available {
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hotel-badge.not-available::before {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.65); }
+}
+
+/* ─────────────────────────────────────────
+   ADDRESS
+───────────────────────────────────────── */
+
+.hotel-address {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #C9A84C;
+  opacity: 0.75;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hotel-address::before {
+  content: '◈';
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   PRICE
+───────────────────────────────────────── */
+
+.hotel-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.hotel-price span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0;
+}
+
+/* ─────────────────────────────────────────
+   DIVIDER
+───────────────────────────────────────── */
+
+.hotel-info-body::after {
+  content: '';
+  display: block;
+  order: 3;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0 0 20px;
+}
+
+/* ─────────────────────────────────────────
+   DESCRIPTION
+───────────────────────────────────────── */
+
+.hotel-description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.75;
+  margin: 0 0 28px;
+  flex: 1;
+  order: 4;
+}
+
+/* ─────────────────────────────────────────
+   BOOK BUTTON
+───────────────────────────────────────── */
+
+.hotel-book-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px 24px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  order: 5;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    rgba(123, 28, 46, 0.92),
+    rgba(180, 40, 70, 0.72)
+  );
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: white;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.22s ease;
+}
+
+/* arrow icon */
+.hotel-book-btn::after {
+  content: '→';
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.hotel-book-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 36px rgba(123, 28, 46, 0.6),
+              0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.hotel-book-btn:hover:not(:disabled)::after {
+  transform: translateX(4px);
+}
+
+.hotel-book-btn:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+/* disabled / not available state */
+.hotel-book-btn:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.hotel-book-btn:disabled::after {
+  content: '';
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+
+@media (max-width: 992px) {
+  .hotel-info-body {
+    padding: 22px 20px 26px;
+  }
+
+  .hotel-title {
+    font-size: 26px;
+  }
+
+  .hotel-price {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hotel-info-card {
+    border-radius: 16px;
+    margin-top: 4px;
+  }
+
+  .hotel-info-body {
+    padding: 18px 16px 22px;
+  }
+
+  .hotel-title {
+    font-size: 22px;
+  }
+
+  .hotel-price {
+    font-size: 30px;
+  }
+
+  .hotel-book-btn {
+    padding: 13px 20px;
+    font-size: 14px;
+  }
+}

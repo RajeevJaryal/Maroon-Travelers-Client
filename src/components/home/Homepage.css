@@ -1,0 +1,415 @@
+/* ─────────────────────────────────────────
+   HOME CONTAINER
+───────────────────────────────────────── */
+
+.home-container {
+  background: #080808;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────
+   HERO SECTION
+───────────────────────────────────────── */
+
+.hero-section {
+  position: relative;
+  /* height, backgroundImage, backgroundSize, backgroundPosition
+     are set inline in JSX — we layer on top */
+}
+
+/* dark + maroon gradient overlay on the image */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(4, 4, 4, 0.72) 0%,
+    rgba(74, 14, 26, 0.55) 50%,
+    rgba(4, 4, 4, 0.80) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* grid lines over the hero image */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   HERO OVERLAY  (content layer)
+───────────────────────────────────────── */
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 2rem;
+  max-width: 720px;
+  animation: heroFadeUp 0.9s ease both;
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* ─────────────────────────────────────────
+   HERO EYEBROW
+   (optional — add above h1 via CSS-only)
+───────────────────────────────────────── */
+
+.hero-overlay::before {
+  content: '✦  Handpicked stays across India  ✦';
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #C9A84C;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  opacity: 0.85;
+  animation: heroFadeUp 0.9s ease 0.1s both;
+}
+
+/* ─────────────────────────────────────────
+   HERO TITLE
+───────────────────────────────────────── */
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: clamp(42px, 7vw, 82px) !important;
+  font-weight: 700 !important;
+  color: white !important;
+  line-height: 1.05 !important;
+  letter-spacing: -2px !important;
+  margin: 0 0 20px !important;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+  animation: heroFadeUp 0.9s ease 0.15s both;
+}
+
+/* italic gold last word effect — "Destinations" */
+.hero-title em {
+  font-style: italic;
+  color: #C9A84C;
+  text-shadow: 0 0 60px rgba(201, 168, 76, 0.4);
+}
+
+/* ─────────────────────────────────────────
+   HERO SUBTITLE
+───────────────────────────────────────── */
+
+.hero-subtitle {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 16px !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  line-height: 1.7 !important;
+  margin: 0 0 36px !important;
+  max-width: 480px;
+  animation: heroFadeUp 0.9s ease 0.25s both;
+}
+
+/* ─────────────────────────────────────────
+   HERO CTA BUTTON
+───────────────────────────────────────── */
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 40px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  background: linear-gradient(
+    135deg,
+    rgba(123, 28, 46, 0.95),
+    rgba(180, 40, 70, 0.80)
+  );
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  color: white;
+
+  box-shadow:
+    0 0 40px rgba(123, 28, 46, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+
+  animation: heroFadeUp 0.9s ease 0.35s both;
+}
+
+.hero-btn::after {
+  content: '→';
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    0 0 60px rgba(123, 28, 46, 0.7),
+    0 16px 40px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.hero-btn:hover::after {
+  transform: translateX(5px);
+}
+
+.hero-btn:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────
+   HERO SCROLL INDICATOR
+───────────────────────────────────────── */
+
+.hero-section .scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: scrollHint 2s ease-in-out infinite;
+}
+
+@keyframes scrollHint {
+  0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+  50%       { opacity: 0.7; transform: translateX(-50%) translateY(5px); }
+}
+
+/* ─────────────────────────────────────────
+   CURVED SECTION BREAK
+───────────────────────────────────────── */
+
+.home-container .features-section {
+  position: relative;
+}
+
+.home-container .features-section::before {
+  content: '';
+  display: block;
+  height: 50px;
+  background: #0e0e0e;
+  clip-path: ellipse(55% 100% at 50% 0%);
+  margin-top: -2px;
+}
+
+/* ─────────────────────────────────────────
+   FEATURES SECTION
+───────────────────────────────────────── */
+
+.features-section {
+  background: #0e0e0e;
+  padding: 4rem 2.5rem 5rem;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────
+   FEATURES TITLE
+───────────────────────────────────────── */
+
+.features-title {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: clamp(28px, 4vw, 44px) !important;
+  font-weight: 700 !important;
+  color: white !important;
+  letter-spacing: -0.5px !important;
+  margin: 0 0 12px !important;
+  line-height: 1.15 !important;
+}
+
+/* gold underline bar */
+.features-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #C9A84C, transparent);
+  border-radius: 1px;
+  margin: 14px auto 0;
+}
+
+/* ─────────────────────────────────────────
+   FEATURES GRID
+───────────────────────────────────────── */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 960px;
+  margin: 3rem auto 0;
+}
+
+/* ─────────────────────────────────────────
+   FEATURE CARD
+───────────────────────────────────────── */
+
+.feature-card {
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  padding: 32px 26px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  animation: featureUp 0.65s ease both;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes featureUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* gold top line on hover */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.7),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-7px);
+  border-color: rgba(201, 168, 76, 0.3);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(201, 168, 76, 0.08);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────
+   FEATURE HEADING
+───────────────────────────────────────── */
+
+.feature-heading {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: white !important;
+  margin: 0 0 12px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ─────────────────────────────────────────
+   FEATURE TEXT
+───────────────────────────────────────── */
+
+.feature-text {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  line-height: 1.7 !important;
+  margin: 0 !important;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .features-section {
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 2rem;
+  }
+
+  .feature-card {
+    padding: 24px 20px;
+  }
+
+  .hero-overlay::before {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-btn {
+    padding: 13px 30px;
+    font-size: 13px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

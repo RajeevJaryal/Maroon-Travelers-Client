@@ -1,9 +1,10 @@
 import React from "react";
 import ListingCard from "./ListingCard";
+import "./ListingGrid.css";
 
 export default function ListingGrid({ items }) {
   return (
-    <div className="row row-cols-1 row-cols-md-3 g-4">
+    <div className="listing-grid">
       {items.map((item) => (
         <ListingCard key={item.id} item={item} />
       ))}

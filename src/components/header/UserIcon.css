@@ -1,0 +1,163 @@
+/* ─────────────────────────────────────────
+   USER ICON WRAPPER
+   — sits inside .icon-btn in the navbar
+───────────────────────────────────────── */
+
+.user-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* fill the entire .icon-btn circle */
+  width: 100%;
+  height: 100%;
+}
+
+/* ─────────────────────────────────────────
+   USER ICON  (FaUserCircle)
+───────────────────────────────────────── */
+
+.user-icon {
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+  transition: color 0.2s, transform 0.15s;
+
+  /* make entire icon the click target */
+  pointer-events: auto;
+}
+
+.user-icon:hover {
+  color: #C9A84C;
+  transform: scale(1.1);
+}
+
+/* ─────────────────────────────────────────
+   USER DROPDOWN
+───────────────────────────────────────── */
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 200px;
+  background: #191919;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  z-index: 1002;
+  animation: dropFade 0.2s ease both;
+
+  /* gold top accent */
+  position: absolute;
+}
+
+.user-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.5),
+    transparent
+  );
+  pointer-events: none;
+}
+
+@keyframes dropFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ─────────────────────────────────────────
+   EMAIL ROW
+───────────────────────────────────────── */
+
+.user-email {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.32);
+  padding: 14px 16px 10px;
+  margin: 0;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  /* truncate long emails */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─────────────────────────────────────────
+   DROPDOWN ITEMS
+───────────────────────────────────────── */
+
+.user-dropdown .dropdown-item {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 11px 16px;
+  margin: 0;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.user-dropdown .dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.user-dropdown .dropdown-item:hover {
+  background: rgba(201, 168, 76, 0.07);
+  color: white;
+}
+
+/* icon prefix per item */
+.user-dropdown .dropdown-item:nth-child(2)::before { content: '👤'; font-size: 13px; }
+.user-dropdown .dropdown-item:nth-child(3)::before { content: '📋'; font-size: 13px; }
+
+/* ─────────────────────────────────────────
+   LOGOUT ITEM
+───────────────────────────────────────── */
+
+.user-dropdown .dropdown-item.logout {
+  color: #f87171;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 2px;
+}
+
+.user-dropdown .dropdown-item.logout::before {
+  content: '→';
+  font-size: 14px;
+  color: #f87171;
+}
+
+.user-dropdown .dropdown-item.logout:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+}
+
+/* login item (logged out state) */
+.user-dropdown .dropdown-item:only-child::before {
+  content: '🔑';
+  font-size: 13px;
+}

@@ -1,0 +1,153 @@
+/* ─────────────────────────────────────────
+   HOTEL DETAILS PAGE WRAPPER
+───────────────────────────────────────── */
+
+/* override Bootstrap .container on this page */
+.hotel-details-page.container {
+  max-width: 1100px;
+  padding: 2.5rem 1.5rem 5rem;
+  background: transparent !important;
+}
+
+/* ─────────────────────────────────────────
+   BACK BUTTON
+   targets Bootstrap .btn.btn-outline-dark
+───────────────────────────────────────── */
+.hotel-details-page .btn-outline-dark,
+.btn.btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+
+  animation: fadeUp 0.5s ease both;
+}
+
+.hotel-details-page .btn-outline-dark:hover,
+.btn.btn-outline-dark:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(201, 168, 76, 0.35) !important;
+  color: #C9A84C !important;
+  transform: translateX(-2px);
+}
+
+.hotel-details-page .btn-outline-dark:focus,
+.btn.btn-outline-dark:focus {
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12) !important;
+  outline: none;
+}
+
+/* ─────────────────────────────────────────
+   ROW / GRID
+───────────────────────────────────────── */
+.hotel-details-page .row {
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+/* ─────────────────────────────────────────
+   LOADING STATE
+───────────────────────────────────────── */
+.details-loading {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+}
+
+.details-loading-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: #C9A84C;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─────────────────────────────────────────
+   ERROR STATE
+───────────────────────────────────────── */
+.details-error {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.details-error-icon {
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.details-error-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+.details-error-btn {
+  margin-top: 8px;
+  padding: 10px 24px;
+  border-radius: 10px;
+  background: rgba(123, 28, 46, 0.2);
+  border: 1px solid rgba(123, 28, 46, 0.4);
+  color: #f4a0b0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.details-error-btn:hover {
+  background: rgba(123, 28, 46, 0.35);
+}
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hotel-details-page.container {
+    padding: 1.5rem 1rem 4rem;
+  }
+}

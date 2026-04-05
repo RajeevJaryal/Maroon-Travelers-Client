@@ -6,7 +6,7 @@ import {
   clearUserAuthError,
 } from "../../redux/userAuthSlice";
 import { useNavigate } from "react-router-dom";
-
+import "./AuthPage.css";
 export default function AuthPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Redirect after login
   useEffect(() => {
     if (idToken) navigate("/");
   }, [idToken, navigate]);
@@ -41,37 +40,39 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="row w-100" style={{ maxWidth: 1000 }}>
-        
-        {/* Left Side (Brand Section) */}
-        <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-center p-5 bg-dark text-white rounded-start">
-          <h1 className="fw-bold">Maroon Travelers</h1>
-          <p className="mt-3 text-white-50">
+    <div className="auth-page">
+      <div className="auth-container">
+
+        {/* LEFT SIDE */}
+        <div className="auth-left">
+          <h1 className="auth-brand">Maroon Travelers</h1>
+          <p className="auth-description">
             Discover beautiful destinations, book your stay easily, and
             experience travel like never before.
           </p>
         </div>
 
-        {/* Right Side (Auth Form) */}
-        <div className="col-lg-6 col-12 bg-white p-5 rounded-end shadow">
-          <h3 className="fw-bold mb-2">
+        {/* RIGHT SIDE */}
+        <div className="auth-right">
+          <h3 className="auth-title">
             {mode === "signup" ? "Create Account" : "Welcome Back"}
           </h3>
-          <p className="text-muted mb-4">
+
+          <p className="auth-subtitle">
             {mode === "signup"
               ? "Sign up to start booking hotels."
               : "Login to continue your journey."}
           </p>
 
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <div className="auth-error">{error}</div>}
 
-          <form onSubmit={onSubmit}>
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Email</label>
+          <form onSubmit={onSubmit} className="auth-form">
+
+            <div className="form-group">
+              <label>Email</label>
               <input
                 type="email"
-                className="form-control form-control-lg"
+                className="input-field"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -79,37 +80,34 @@ export default function AuthPage() {
               />
             </div>
 
-            <div className="mb-4">
-              <label className="form-label fw-semibold">Password</label>
+            <div className="form-group">
+              <label>Password</label>
               <input
                 type="password"
-                className="form-control form-control-lg"
+                className="input-field"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={6}
                 required
               />
-              <small className="text-muted">
+              <small className="input-hint">
                 Minimum 6 characters required
               </small>
             </div>
 
-            <button
-              className="btn btn-dark btn-lg w-100"
-              disabled={loading}
-            >
+            <button className="auth-btn" disabled={loading}>
               {loading
                 ? "Please wait..."
                 : mode === "signup"
                 ? "Create Account"
                 : "Login"}
             </button>
+
           </form>
 
-          <div className="text-center mt-4">
+          <div className="auth-switch">
             <button
-              className="btn btn-link text-decoration-none"
               type="button"
               onClick={() => {
                 dispatch(clearUserAuthError());
@@ -121,6 +119,7 @@ export default function AuthPage() {
                 : "Already have an account? Login"}
             </button>
           </div>
+
         </div>
 
       </div>

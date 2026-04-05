@@ -1,0 +1,245 @@
+/* ─────────────────────────────────────────
+   PAGE WRAPPER
+───────────────────────────────────────── */
+
+.listing-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+  min-height: calc(100vh - 68px);
+  background: transparent;
+  animation: pageFadeIn 0.5s ease both;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─────────────────────────────────────────
+   ERROR STATE
+───────────────────────────────────────── */
+
+.listing-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.3s ease both;
+}
+
+.listing-error::before {
+  content: '⚠';
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────
+   EMPTY STATE
+───────────────────────────────────────── */
+
+.listing-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 5rem 2rem;
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+}
+
+.listing-empty::before {
+  content: '🔍';
+  font-size: 48px;
+  opacity: 0.4;
+  margin-bottom: 4px;
+}
+
+.listing-empty h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.listing-empty p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.listing-empty button {
+  margin-top: 6px;
+  padding: 11px 28px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: #C9A84C;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.listing-empty button:hover {
+  background: rgba(201, 168, 76, 0.1);
+  transform: scale(1.03);
+}
+
+/* ─────────────────────────────────────────
+   SKELETON GRID
+   (used while loading — same grid as ListingGrid)
+───────────────────────────────────────── */
+
+.listing-page > .listing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 2rem 0;
+}
+
+/* ─────────────────────────────────────────
+   PAGINATION
+───────────────────────────────────────── */
+
+.listing-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+
+/* all buttons share this base */
+.listing-pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.15s;
+}
+
+.listing-pagination button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* active page */
+.listing-pagination button.active {
+  background: linear-gradient(
+    135deg,
+    rgba(123, 28, 46, 0.9),
+    rgba(180, 40, 70, 0.7)
+  );
+  border-color: rgba(201, 168, 76, 0.35);
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 0 20px rgba(123, 28, 46, 0.4);
+}
+
+.listing-pagination button.active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(123, 28, 46, 0.55);
+}
+
+/* prev / next disabled */
+.listing-pagination button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Prev / Next arrows — first and last button */
+.listing-pagination button:first-child,
+.listing-pagination button:last-child {
+  padding: 0 16px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  gap: 5px;
+}
+
+.listing-pagination button:first-child::before {
+  content: '←';
+  font-size: 14px;
+}
+
+.listing-pagination button:last-child::after {
+  content: '→';
+  font-size: 14px;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .listing-page > .listing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .listing-page {
+    padding: 1.75rem 1.25rem 4rem;
+  }
+
+  .listing-pagination button {
+    min-width: 36px;
+    height: 36px;
+    font-size: 12px;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .listing-page > .listing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .listing-pagination {
+    gap: 6px;
+  }
+}
